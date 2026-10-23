@@ -27,13 +27,13 @@ The car is currently powered by a wall-plug power supply.
 
 ## Progress
 
-### Commit 1 — rear motors + encoders ([`3eb7616`](https://github.com/Ph1so/autonomous-car/commit/3eb7616))
+### Oct 22, 2026 — rear motors + encoders ([`3eb7616`](https://github.com/Ph1so/autonomous-car/commit/3eb7616))
 
 Both rear wheels can spin forward and in reverse, and the wheel encoders track the spin.
 
-https://github.com/user-attachments/assets/312eced3-d56e-4383-8ea9-7ac688752641
+https://github.com/user-attachments/assets/619cad2e-01a0-4b4f-825d-e00940ae4f94
 
-### Commit 2 — steering servo ([`84c9bc5`](https://github.com/Ph1so/autonomous-car/commit/84c9bc5))
+### Oct 23, 2026 — steering servo ([`84c9bc5`](https://github.com/Ph1so/autonomous-car/commit/84c9bc5))
 
 The steering servo is wired to the ESP32 and turns the front wheels left and right. The car can now be driven and steered with serial commands, and it runs a preflight check that sweeps the steering while driving forward and in reverse.
 
