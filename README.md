@@ -6,6 +6,4 @@
 
 Both rear wheels can spin forward and in reverse, and the wheel encoders track the spin.
 
-<a href="media/commit1-rear-motors.mp4"><img src="media/commit1-rear-motors.jpg" width="320" alt="Both rear motors spinning forward and in reverse while encoder ticks print over serial"></a>
-
-*Click the image to watch the video.*
+![Both rear motors spinning forward and in reverse while encoder ticks print over serial](media/commit1-rear-motors.gif)
