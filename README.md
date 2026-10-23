@@ -31,10 +31,10 @@ The car is currently powered by a wall-plug power supply.
 
 Both rear wheels can spin forward and in reverse, and the wheel encoders track the spin.
 
-![Both rear motors spinning forward and in reverse while encoder ticks print over serial](media/commit1-rear-motors.gif)
+https://github.com/user-attachments/assets/312eced3-d56e-4383-8ea9-7ac688752641
 
 ### Commit 2 — steering servo ([`84c9bc5`](https://github.com/Ph1so/autonomous-car/commit/84c9bc5))
 
 The steering servo is wired to the ESP32 and turns the front wheels left and right. The car can now be driven and steered with serial commands, and it runs a preflight check that sweeps the steering while driving forward and in reverse.
 
-[![Steering servo turning the front wheels left and right](media/commit2-steering-servo.gif)](media/commit2-steering-servo.mp4)
+https://github.com/user-attachments/assets/e2327bac-70e3-4597-b05d-988a0bba1404
