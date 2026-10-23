@@ -11,7 +11,7 @@ Build an autonomous car with a LiDAR, a camera, an IMU, and two drive motors wit
 
 Hardware in use so far:
 
-- Car chassis (got it for free)
+- Car chassis (got it for free :)) )
 - 2 drive motors with attached encoders
 - L298N motor controller
 - ESP32
@@ -23,7 +23,7 @@ The car is currently powered by a wall-plug power supply.
 
 - [ ] Buy an onboard power supply so the car doesn't need to be plugged into the wall
 - [ ] Wire up the steering servo and make sure it works
-- [ ] 3D print a plate for the top of the chassis so the Arduino, ESP32, motor controller, etc. sit snugly
+- [ ] 3D print a plate for the top of the chassis so the Raspberry Pi, ESP32, motor controller, etc. sit snugly
 
 ## Progress
 
