@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="530" viewBox="0 0 680 530" role="img">
+<title>Rover signal and data wiring</title>
+<desc>The Pi 5 connects to a camera over a CSI ribbon, a lidar over USB, and an ESP32 over USB. The ESP32 connects to an IMU over I2C, sends PWM and direction signals to the motor driver, and a PWM signal to the servo. Optional wheel encoders send feedback from the motors to the ESP32.</desc>
+<style>
+text{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.th{font-size:14px;font-weight:600;fill:#2C2C2A}
+.ts{font-size:12px;fill:#5F5E5A}
+.c-purple>rect{fill:#EEEDFE;stroke:#534AB7}
+.c-purple>.th{fill:#3C3489}.c-purple>.ts{fill:#534AB7}
+.c-teal>rect{fill:#E1F5EE;stroke:#0F6E56}
+.c-teal>.th{fill:#085041}.c-teal>.ts{fill:#0F6E56}
+.c-gray>rect{fill:#F1EFE8;stroke:#5F5E5A}
+.c-gray>.th{fill:#444441}.c-gray>.ts{fill:#5F5E5A}
+</style>
+<rect width="680" height="530" fill="#FFFFFF"/>
+<g fill="none" stroke-linejoin="round">
+<path d="M180 95 L260 95" stroke="#888780" stroke-width="2"/>
+<path d="M420 95 L500 95" stroke="#888780" stroke-width="2"/>
+<path d="M340 130 L340 220" stroke="#888780" stroke-width="2"/>
+<path d="M260 255 L180 255" stroke="#EF9F27" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M300 290 L300 335 L230 335 L230 380" stroke="#EF9F27" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M380 290 L380 335 L470 335 L470 380" stroke="#EF9F27" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M160 415 L130 415" stroke="#888780" stroke-width="2"/>
+<path d="M80 380 L80 308 L248 308 L248 280 L260 280" stroke="#7F77DD" stroke-width="1.2" stroke-dasharray="2 3"/>
+</g>
+<g class="c-purple"><rect x="40" y="60" width="140" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="110" y="86" text-anchor="middle" dominant-baseline="central">Camera</text>
+<text class="ts" x="110" y="106" text-anchor="middle" dominant-baseline="central">Pi camera module</text></g>
+<text class="ts" x="220" y="80" text-anchor="middle" dominant-baseline="central">CSI ribbon</text>
+<g class="c-gray"><rect x="260" y="60" width="160" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="340" y="86" text-anchor="middle" dominant-baseline="central">Raspberry Pi 5</text>
+<text class="ts" x="340" y="106" text-anchor="middle" dominant-baseline="central">SLAM, planning</text></g>
+<text class="ts" x="460" y="80" text-anchor="middle" dominant-baseline="central">USB</text>
+<g class="c-purple"><rect x="500" y="60" width="140" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="570" y="86" text-anchor="middle" dominant-baseline="central">Lidar</text>
+<text class="ts" x="570" y="106" text-anchor="middle" dominant-baseline="central">360 degree scans</text></g>
+<text class="ts" x="352" y="175" dominant-baseline="central">USB, power and data</text>
+<g class="c-teal"><rect x="260" y="220" width="160" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="340" y="246" text-anchor="middle" dominant-baseline="central">ESP32</text>
+<text class="ts" x="340" y="266" text-anchor="middle" dominant-baseline="central">Timing, motor control</text></g>
+<text class="ts" x="220" y="240" text-anchor="middle" dominant-baseline="central">I2C</text>
+<g class="c-purple"><rect x="40" y="220" width="140" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="110" y="246" text-anchor="middle" dominant-baseline="central">IMU</text>
+<text class="ts" x="110" y="266" text-anchor="middle" dominant-baseline="central">3.3V from ESP32</text></g>
+<text class="ts" x="265" y="322" text-anchor="middle" dominant-baseline="central">PWM, DIR</text>
+<text class="ts" x="425" y="322" text-anchor="middle" dominant-baseline="central">PWM</text>
+<g class="c-gray"><rect x="30" y="380" width="100" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="80" y="400" text-anchor="middle" dominant-baseline="central">Motors</text></g>
+<circle cx="62" cy="425" r="11" fill="none" stroke="#888780" stroke-width="1"/><circle cx="62" cy="425" r="3" fill="#888780"/>
+<circle cx="98" cy="425" r="11" fill="none" stroke="#888780" stroke-width="1"/><circle cx="98" cy="425" r="3" fill="#888780"/>
+<g class="c-teal"><rect x="160" y="380" width="140" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="230" y="406" text-anchor="middle" dominant-baseline="central">Motor driver</text>
+<text class="ts" x="230" y="426" text-anchor="middle" dominant-baseline="central">Speed, direction</text></g>
+<g class="c-gray"><rect x="400" y="380" width="140" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="470" y="406" text-anchor="middle" dominant-baseline="central">Servo</text>
+<text class="ts" x="470" y="426" text-anchor="middle" dominant-baseline="central">Steering angle</text></g>
+<line x1="40" y1="495" x2="70" y2="495" stroke="#888780" stroke-width="2"/>
+<text class="ts" x="78" y="495" dominant-baseline="central">Cable (USB, CSI, motor)</text>
+<line x1="250" y1="495" x2="280" y2="495" stroke="#EF9F27" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text class="ts" x="288" y="495" dominant-baseline="central">Signal, 22 to 26 AWG</text>
+<line x1="450" y1="495" x2="480" y2="495" stroke="#7F77DD" stroke-width="1.2" stroke-dasharray="2 3"/>
+<text class="ts" x="488" y="495" dominant-baseline="central">Wheel encoders</text>
+</svg>

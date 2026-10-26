@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="530" viewBox="0 0 680 530" role="img">
+<title>Rover power wiring</title>
+<desc>A 3S LiPo connects through an XT60 pigtail, a 20A DC switch and a 15A inline blade fuse to two lever nuts using 14 AWG wire. The lever nuts feed the motor driver with 16 AWG, the buck converter with 18 AWG, and the BEC with 20 to 22 AWG. The buck powers the Pi 5, which in turn powers the lidar, ESP32, camera and IMU. The BEC powers the servo.</desc>
+<style>
+text{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.th{font-size:14px;font-weight:600;fill:#2C2C2A}
+.ts{font-size:12px;fill:#5F5E5A}
+.box{fill:#F1EFE8;stroke:#888780}
+.leader{stroke:#888780;stroke-width:0.5;stroke-dasharray:3 3;fill:none}
+.c-coral>rect{fill:#FAECE7;stroke:#993C1D}
+.c-teal>rect{fill:#E1F5EE;stroke:#0F6E56}
+.c-teal>.th{fill:#085041}.c-teal>.ts{fill:#0F6E56}
+.c-gray>rect{fill:#F1EFE8;stroke:#5F5E5A}
+.c-gray>.th{fill:#444441}.c-gray>.ts{fill:#5F5E5A}
+</style>
+<rect width="680" height="530" fill="#FFFFFF"/>
+<g fill="none" stroke-width="2" stroke-linejoin="round">
+<path d="M140 250 L170 250" stroke="#E24B4A" stroke-width="3"/>
+<path d="M140 280 L170 280" stroke="#2C2C2A" stroke-width="3"/>
+<path d="M196 250 L210 250" stroke="#E24B4A" stroke-width="3"/>
+<path d="M240 250 L250 250" stroke="#E24B4A" stroke-width="3"/>
+<path d="M276 250 L280 250 L280 160 L290 160" stroke="#E24B4A" stroke-width="3"/>
+<path d="M196 280 L270 280 L270 380 L290 380" stroke="#2C2C2A" stroke-width="3"/>
+<path d="M350 150 L358 150 L358 70 L430 70" stroke="#E24B4A" stroke-width="2.5"/>
+<path d="M350 160 L370 160 L370 235 L430 235" stroke="#E24B4A"/>
+<path d="M350 170 L382 170 L382 400 L430 400" stroke="#E24B4A" stroke-width="1.5"/>
+<path d="M350 370 L394 370 L394 100 L430 100" stroke="#2C2C2A" stroke-width="2.5"/>
+<path d="M350 380 L406 380 L406 265 L430 265" stroke="#2C2C2A"/>
+<path d="M350 390 L418 390 L418 430 L430 430" stroke="#2C2C2A" stroke-width="1.5"/>
+<path d="M540 230 L553 230 L553 195 L565 195" stroke="#E24B4A"/>
+<path d="M540 250 L558 250 L558 215 L565 215" stroke="#2C2C2A"/>
+<path d="M540 405 L565 405" stroke="#E24B4A" stroke-width="1.5"/>
+<path d="M540 425 L565 425" stroke="#2C2C2A" stroke-width="1.5"/>
+<path d="M540 75 L565 75" stroke="#888780"/>
+<path d="M540 95 L565 95" stroke="#888780"/>
+<path d="M615 240 L615 270" stroke="#888780"/>
+</g>
+<g class="c-coral"><rect x="30" y="220" width="110" height="90" rx="8" stroke-width="0.5"/></g>
+<line x1="67" y1="226" x2="67" y2="304" stroke="#D85A30" stroke-width="0.5"/>
+<line x1="103" y1="226" x2="103" y2="304" stroke="#D85A30" stroke-width="0.5"/>
+<text class="th" x="128" y="250" text-anchor="middle" dominant-baseline="central">+</text>
+<text class="th" x="128" y="280" text-anchor="middle" dominant-baseline="central">−</text>
+<text class="th" x="85" y="330" text-anchor="middle" dominant-baseline="central">3S LiPo</text>
+<text class="ts" x="85" y="348" text-anchor="middle" dominant-baseline="central">11.1V nominal</text>
+<rect x="170" y="238" width="26" height="54" rx="3" fill="#FAC775" stroke="#854F0B" stroke-width="0.5"/>
+<rect x="176" y="245" width="14" height="10" rx="2" fill="#854F0B"/>
+<rect x="176" y="275" width="14" height="10" rx="2" fill="#854F0B"/>
+<text class="ts" x="183" y="330" text-anchor="middle" dominant-baseline="central">XT60 pigtail</text>
+<text class="ts" x="183" y="348" text-anchor="middle" dominant-baseline="central">12 to 14 AWG</text>
+<circle cx="212" cy="250" r="2.5" fill="#2C2C2A"/>
+<circle cx="238" cy="250" r="2.5" fill="#2C2C2A"/>
+<line x1="212" y1="250" x2="234" y2="240" stroke="#2C2C2A" stroke-width="1.5"/>
+<rect x="250" y="244" width="26" height="12" rx="3" fill="none" stroke="#2C2C2A" stroke-width="1"/>
+<line x1="254" y1="250" x2="272" y2="250" stroke="#2C2C2A" stroke-width="0.8"/>
+<line class="leader" x1="194" y1="112" x2="263" y2="240"/><circle cx="263" cy="242" r="2" fill="#888780"/>
+<text class="th" x="40" y="96" dominant-baseline="central">Fuse</text>
+<text class="ts" x="40" y="114" dominant-baseline="central">15A blade, inline holder</text>
+<line class="leader" x1="134" y1="174" x2="222" y2="241"/><circle cx="224" cy="243" r="2" fill="#888780"/>
+<text class="th" x="40" y="156" dominant-baseline="central">Switch</text>
+<text class="ts" x="40" y="174" dominant-baseline="central">20A+ DC rated</text>
+<text class="th" x="320" y="262" text-anchor="middle" dominant-baseline="central">14 AWG</text>
+<text class="ts" x="320" y="280" text-anchor="middle" dominant-baseline="central">battery side</text>
+<rect class="box" x="290" y="140" width="60" height="40" rx="4" stroke-width="0.5"/>
+<rect x="296" y="132" width="10" height="8" rx="2" fill="#EF9F27"/><rect x="309" y="132" width="10" height="8" rx="2" fill="#EF9F27"/><rect x="322" y="132" width="10" height="8" rx="2" fill="#EF9F27"/><rect x="335" y="132" width="10" height="8" rx="2" fill="#EF9F27"/>
+<text class="th" x="320" y="160" text-anchor="middle" dominant-baseline="central">+</text>
+<text class="ts" x="320" y="198" text-anchor="middle" dominant-baseline="central">Lever nut +</text>
+<rect class="box" x="290" y="360" width="60" height="40" rx="4" stroke-width="0.5"/>
+<rect x="296" y="352" width="10" height="8" rx="2" fill="#EF9F27"/><rect x="309" y="352" width="10" height="8" rx="2" fill="#EF9F27"/><rect x="322" y="352" width="10" height="8" rx="2" fill="#EF9F27"/><rect x="335" y="352" width="10" height="8" rx="2" fill="#EF9F27"/>
+<text class="th" x="320" y="380" text-anchor="middle" dominant-baseline="central">GND</text>
+<text class="ts" x="320" y="418" text-anchor="middle" dominant-baseline="central">Lever nut GND</text>
+<g class="c-teal"><rect x="430" y="50" width="110" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="485" y="76" text-anchor="middle" dominant-baseline="central">Motor driver</text>
+<text class="ts" x="485" y="96" text-anchor="middle" dominant-baseline="central">Battery voltage</text></g>
+<text class="ts" x="485" y="136" text-anchor="middle" dominant-baseline="central">16 AWG in</text>
+<g class="c-teal"><rect x="430" y="215" width="110" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="485" y="241" text-anchor="middle" dominant-baseline="central">Buck</text>
+<text class="ts" x="485" y="261" text-anchor="middle" dominant-baseline="central">12V to 5V, 5A+</text></g>
+<text class="ts" x="485" y="301" text-anchor="middle" dominant-baseline="central">18 AWG in</text>
+<g class="c-teal"><rect x="430" y="380" width="110" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="485" y="406" text-anchor="middle" dominant-baseline="central">BEC</text>
+<text class="ts" x="485" y="426" text-anchor="middle" dominant-baseline="central">Servo supply</text></g>
+<text class="ts" x="485" y="466" text-anchor="middle" dominant-baseline="central">20 to 22 AWG in</text>
+<circle cx="434" cy="70" r="2.5" fill="#085041"/><circle cx="434" cy="100" r="2.5" fill="#085041"/>
+<circle cx="434" cy="235" r="2.5" fill="#085041"/><circle cx="434" cy="265" r="2.5" fill="#085041"/>
+<circle cx="434" cy="400" r="2.5" fill="#085041"/><circle cx="434" cy="430" r="2.5" fill="#085041"/>
+<g class="c-gray"><rect x="565" y="50" width="100" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="615" y="68" text-anchor="middle" dominant-baseline="central">Motors</text></g>
+<circle cx="595" cy="96" r="12" fill="none" stroke="#888780" stroke-width="1"/><circle cx="595" cy="96" r="3" fill="#888780"/>
+<circle cx="635" cy="96" r="12" fill="none" stroke="#888780" stroke-width="1"/><circle cx="635" cy="96" r="3" fill="#888780"/>
+<text class="ts" x="615" y="136" text-anchor="middle" dominant-baseline="central">16 AWG leads</text>
+<g class="c-gray"><rect x="565" y="170" width="100" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="615" y="196" text-anchor="middle" dominant-baseline="central">Pi 5</text>
+<text class="ts" x="615" y="216" text-anchor="middle" dominant-baseline="central">18 AWG, GPIO</text></g>
+<g class="c-gray"><rect x="565" y="270" width="100" height="74" rx="6" stroke-width="0.5"/>
+<text class="th" x="615" y="288" text-anchor="middle" dominant-baseline="central">Pi powers</text>
+<text class="ts" x="615" y="307" text-anchor="middle" dominant-baseline="central">Lidar, ESP32</text>
+<text class="ts" x="615" y="325" text-anchor="middle" dominant-baseline="central">camera, IMU</text></g>
+<g class="c-gray"><rect x="565" y="385" width="100" height="70" rx="6" stroke-width="0.5"/>
+<text class="th" x="615" y="411" text-anchor="middle" dominant-baseline="central">Servo</text>
+<text class="ts" x="615" y="431" text-anchor="middle" dominant-baseline="central">Its own cable</text></g>
+<line x1="40" y1="500" x2="70" y2="500" stroke="#E24B4A" stroke-width="2"/>
+<text class="ts" x="78" y="500" dominant-baseline="central">Positive</text>
+<line x1="180" y1="500" x2="210" y2="500" stroke="#2C2C2A" stroke-width="2"/>
+<text class="ts" x="218" y="500" dominant-baseline="central">Ground</text>
+<line x1="320" y1="500" x2="350" y2="500" stroke="#888780" stroke-width="2"/>
+<text class="ts" x="358" y="500" dominant-baseline="central">Motor leads or USB</text>
+</svg>
