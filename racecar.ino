@@ -1,3 +1,5 @@
+#include <BluetoothSerial.h>
+
 // ===================== Config =====================
 // Drive motors: 0 = OUT1/OUT2, 1 = OUT3/OUT4
 const int EN[2]    = {25, 13};
@@ -15,6 +17,9 @@ const int SERVO_CENTER = 1500;
 const int SERVO_MAX    = 2000;
 const int STEER_SIGN   = 1;  // flip to -1 if steer(1.0) turns right instead of left
 
+// Safety
+const unsigned long CMD_TIMEOUT_MS = 1000;  // stop driving if no command arrives for this long
+
 // ===================== State =====================
 volatile long ticks[2] = {0, 0};
 int driveCmd = 0;
@@ -22,7 +27,10 @@ int servoUs = SERVO_CENTER;
 bool testRunning = false;
 bool aborted = false;
 String pendingTest = "";
-String line;
+BluetoothSerial SerialBT;
+String usbLine, btLine;    // one buffer per source so their bytes never mix
+Stream* out = &Serial;     // replies go to whichever source sent the last command
+unsigned long lastCmdMs = 0;
 
 // ===================== Encoders =====================
 void IRAM_ATTR onA0() { ticks[0] += digitalRead(ENC_B[0]) ? encDir[0] : -encDir[0]; }
@@ -77,8 +85,8 @@ void printTelemetry() {
   if (millis() - lastPrint < 200) return;
   lastPrint = millis();
   long t0 = getTicks(0), t1 = getTicks(1);
-  Serial.printf("drive %4d servo %4d | M0 ticks %7ld rate %4ld | M1 ticks %7ld rate %4ld\r\n",
-                driveCmd, servoUs, t0, t0 - last0, t1, t1 - last1);
+  out->printf("drive %4d servo %4d | M0 ticks %7ld rate %4ld | M1 ticks %7ld rate %4ld\r\n",
+              driveCmd, servoUs, t0, t0 - last0, t1, t1 - last1);
   last0 = t0;
   last1 = t1;
 }
@@ -90,6 +98,7 @@ void printTelemetry() {
 // t <name>     run a test
 // r            reset ticks
 // x            emergency stop, also aborts a running test
+// Commands come from USB or Bluetooth. Driving stops if no line arrives for CMD_TIMEOUT_MS.
 void handleCommand(String cmd) {
   cmd.trim();
   if (cmd.length() == 0) return;
@@ -102,7 +111,7 @@ void handleCommand(String cmd) {
       aborted = true;
       stopDrive();
       center();
-      Serial.println(">> STOP");
+      out->println(">> STOP");
       return;
     case 'd': if (!testRunning) drive(arg.toInt()); break;
     case 's': if (!testRunning) steerUs(arg.toInt()); break;
@@ -110,30 +119,46 @@ void handleCommand(String cmd) {
     case 'r': resetTicks(); break;
     case 't': if (!testRunning) pendingTest = arg; break;
     default:
-      Serial.println(">> unknown command");
+      out->println(">> unknown command");
       return;
   }
-  Serial.printf(">> drive %d  servo %d\r\n", driveCmd, servoUs);
+  out->printf(">> drive %d  servo %d\r\n", driveCmd, servoUs);
 }
 
-void handleSerial() {
-  while (Serial.available()) {
-    char c = Serial.read();
+void readLines(Stream& in, String& buf) {
+  while (in.available()) {
+    char c = in.read();
     if (c == '\n' || c == '\r') {
-      handleCommand(line);
-      line = "";
+      lastCmdMs = millis();
+      out = &in;
+      handleCommand(buf);
+      buf = "";
     } else {
-      line += c;
+      buf += c;
     }
   }
 }
 
+void handleSerial() {
+  readLines(Serial, usbLine);
+  readLines(SerialBT, btLine);
+}
+
+// Stops driving if commands stop arriving, e.g. Bluetooth dropped. Aborts a running test like 'x'.
+void checkCmdTimeout() {
+  if (driveCmd == 0 || millis() - lastCmdMs < CMD_TIMEOUT_MS) return;
+  aborted = true;
+  stopDrive();
+  out->println(">> no command for 1 s, STOP");
+}
+
 // Holds the current drive and steer for ms milliseconds.
-// Keeps telemetry and commands running. Returns false if aborted with 'x'.
+// Keeps telemetry and commands running. Returns false if aborted with 'x' or the command timeout.
 bool runFor(unsigned long ms) {
   unsigned long start = millis();
   while (millis() - start < ms) {
     handleSerial();
+    checkCmdTimeout();
     printTelemetry();
     if (aborted) return false;
     delay(1);
@@ -161,7 +186,7 @@ bool sweepWhileDriving(int speed) {
 // Short forward and backward drive with steering sweeps.
 // Returns true only if both encoders counted the right way in both directions.
 bool preflight() {
-  Serial.println(">> preflight: forward + sweep");
+  out->println(">> preflight: forward + sweep");
   long f0[2] = {getTicks(0), getTicks(1)};
   if (!sweepWhileDriving(CHECK_SPEED)) return false;
   long f1[2] = {getTicks(0), getTicks(1)};
@@ -170,7 +195,7 @@ bool preflight() {
   center();
   if (!runFor(500)) return false;  // let it coast to a stop
 
-  Serial.println(">> preflight: reverse + sweep");
+  out->println(">> preflight: reverse + sweep");
   long r0[2] = {getTicks(0), getTicks(1)};
   if (!sweepWhileDriving(-CHECK_SPEED)) return false;
   long r1[2] = {getTicks(0), getTicks(1)};
@@ -184,12 +209,12 @@ bool preflight() {
     long fwd = f1[i] - f0[i];
     long rev = r1[i] - r0[i];
     bool ok = (fwd > CHECK_MIN_TICKS) && (rev < -CHECK_MIN_TICKS);
-    Serial.printf(">> M%d  forward %+ld  reverse %+ld  %s\r\n",
-                  i, fwd, rev, ok ? "PASS" : "FAIL");
+    out->printf(">> M%d  forward %+ld  reverse %+ld  %s\r\n",
+                i, fwd, rev, ok ? "PASS" : "FAIL");
     if (!ok) allOk = false;
   }
-  Serial.println(allOk ? ">> preflight PASS (check steering looked right)"
-                       : ">> preflight FAIL, stopping");
+  out->println(allOk ? ">> preflight PASS (check steering looked right)"
+                     : ">> preflight FAIL, stopping");
   return allOk;
 }
 
@@ -230,18 +255,18 @@ void testSteerSweep() {  // steering only, no driving
 void runTest(const String& name) {
   testRunning = true;
   aborted = false;
-  Serial.printf(">> test %s start\r\n", name.c_str());
+  out->printf(">> test %s start\r\n", name.c_str());
 
   if      (name == "check")    testCheck();
   else if (name == "straight") testStraight();
   else if (name == "circle")   testCircle();
   else if (name == "eight")    testFigureEight();
   else if (name == "sweep")    testSteerSweep();
-  else Serial.println(">> unknown test");
+  else out->println(">> unknown test");
 
   stopDrive();
   center();
-  Serial.printf(">> test %s %s\r\n", name.c_str(), aborted ? "aborted" : "done");
+  out->printf(">> test %s %s\r\n", name.c_str(), aborted ? "aborted" : "done");
   testRunning = false;
   aborted = false;
 }
@@ -249,6 +274,7 @@ void runTest(const String& name) {
 // ===================== Main =====================
 void setup() {
   Serial.begin(115200);
+  SerialBT.begin("rover");
   for (int i = 0; i < 2; i++) {
     pinMode(INA[i], OUTPUT);
     pinMode(INB[i], OUTPUT);
@@ -269,6 +295,7 @@ void setup() {
 
 void loop() {
   handleSerial();
+  checkCmdTimeout();
   printTelemetry();
   if (pendingTest.length() > 0) {
     String t = pendingTest;
