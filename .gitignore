@@ -8,3 +8,10 @@ __pycache__/
 
 # macOS
 .DS_Store
+
+# Raw videos and older demos stay out of the repo; the README links
+# GitHub-hosted copies. New lidar GIFs in media/ aren't ignored.
+media/*.mov
+media/*.mp4
+media/2026-10-22-rear-motors.gif
+media/2026-10-23-steering-servo.gif
