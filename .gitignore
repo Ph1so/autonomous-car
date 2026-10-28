@@ -1,0 +1,10 @@
+# Slamtec SDK build output. The SDK's own .gitignore is what keeps the
+# submodule clean; git doesn't apply this file inside a submodule.
+third_party/rplidar_sdk/output/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store

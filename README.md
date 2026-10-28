@@ -32,6 +32,25 @@ Signal and data, showing how the Pi, ESP32, and sensors talk to each other.
 
 ![Signal and data wiring](docs/wiring/signal-wiring.svg)
 
+## Code
+
+Clone with the Slamtec SDK submodule:
+
+```sh
+git clone --recurse-submodules https://github.com/Ph1so/autonomous-car.git
+```
+
+If you already cloned without it, run `git submodule update --init` inside the repo.
+
+- `firmware/racecar/`: ESP32 sketch for the drive motors, encoders, steering, and USB/Bluetooth commands. Arduino needs the folder name to match `racecar.ino`.
+- `tools/`: laptop-side scripts, like `lidar_view.py`, a live top-down plot of lidar scans
+- `slam/`: mapping and localization (empty for now)
+- `third_party/rplidar_sdk/`: Slamtec's RPLIDAR SDK, as a git submodule
+- `docs/`: parts list and wiring diagrams
+- `media/`: demo videos and GIFs
+
+Build, upload, and run commands are in [usage.md](usage.md).
+
 ## Next steps
 
 - [x] Buy an onboard power supply so the car doesn't need to be plugged into the wall
