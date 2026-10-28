@@ -9,7 +9,8 @@
 - Stops the motors if no command arrives for 1 second
 - Runs a preflight self-test and scripted test drives (straight, circle, figure eight)
 - Runs entirely on its onboard 3S LiPo battery
-- No sensors or autonomy yet
+- Reads 360° scans from the RPLIDAR C1 and shows them live as a top-down plot (on my laptop for now)
+- No autonomy yet
 
 ## Goal
 
@@ -71,6 +72,8 @@ The steering servo is wired to the ESP32 and turns the front wheels left and rig
 
 https://github.com/user-attachments/assets/e2327bac-70e3-4597-b05d-988a0bba1404
 
-### Oct 28, 2026 — battery power + Bluetooth control
+### Oct 28, 2026 — battery power, Bluetooth, and lidar ([`905fb50`](https://github.com/Ph1so/autonomous-car/commit/905fb50), [`088c1e6`](https://github.com/Ph1so/autonomous-car/commit/088c1e6))
 
-The car now runs entirely on its 3S LiPo, so it no longer needs to be plugged into the wall. The ESP32 shows up as a Bluetooth device called "rover" and takes the same drive and steering commands over Bluetooth as it does over USB, so I can drive the car remotely from my laptop. As a safety stop, the motors shut off if no command arrives for 1 second, in case Bluetooth drops while the car is moving.
+The car now runs on its 3S LiPo and takes drive and steering commands over Bluetooth, stopping the motors if no command arrives for 1 second. The RPLIDAR C1 streams scans to my laptop through Slamtec's SDK, and `tools/lidar_view.py` plots each rotation live from above.
+
+![Live lidar view](media/2026-10-28-lidar-173015.gif)

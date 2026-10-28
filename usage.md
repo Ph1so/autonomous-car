@@ -34,4 +34,6 @@ Plug in the RPLIDAR C1. It shows up as `/dev/cu.usbserial-110` and needs baud 46
 
 The plot shows ±3 m around the lidar. Pass `--range` to the viewer to change it, e.g. `python3 tools/lidar_view.py --range 6`.
 
+To record a GIF, click the plot window and press `r`. A red "● REC" shows while it records. Press `r` again to stop, and the GIF is saved to `media/` as `YYYY-MM-DD-lidar-HHMMSS.gif`. The terminal prints the path and size when it's done. If you quit while recording, the GIF is saved before the viewer exits.
+
 Stop with Ctrl-C in the terminal, which lets ultra_simple stop the lidar motor before it exits. Closing the window also ends the viewer, but ultra_simple then gets killed by the closed pipe and skips stopping the motor.

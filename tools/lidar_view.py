@@ -7,7 +7,8 @@ repo root:
     ./third_party/rplidar_sdk/output/Darwin/Release/ultra_simple \\
         --channel --serial /dev/cu.usbserial-110 460800 | python3 tools/lidar_view.py
 
-Stop with Ctrl-C in the terminal, or close the window.
+Press r in the window to start recording, and r again to save it as a GIF in
+media/. Stop with Ctrl-C in the terminal, or close the window.
 """
 
 import argparse
@@ -17,18 +18,29 @@ import os
 import re
 import select
 import sys
+import threading
 import time
+from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.figure import Figure
+from PIL import Image
 
 # One line per sample, e.g. "S  theta: 0.00 Dist: 00352.00 Q: 47".
 # A leading S marks the first sample of a new rotation.
 SAMPLE = re.compile(rb"(S)?\s+theta:\s*([\d.]+)\s+Dist:\s*([\d.]+)\s+Q:\s*(\d+)")
 
+FIGSIZE = (8, 8)  # inches, 100 points each on screen; taller doesn't fit a laptop screen
+GIF_DPI = 80      # GIF frames are FIGSIZE at this dpi, 640 x 640 px
+MEDIA = Path(__file__).resolve().parent.parent / "media"
+
 SURFACE = "#fcfcfb"
 TEXT = "#0b0b0b"
 MUTED = "#52514e"
 POINTS = "#2a78d6"
+RECORDING = "#d03b3b"
 
 
 class ScanParser:
@@ -65,9 +77,9 @@ class ScanParser:
         return self.points or None
 
 
-def make_plot(view_range):
-    fig, ax = plt.subplots(figsize=(7, 7), facecolor=SURFACE)
-    fig.canvas.manager.set_window_title("lidar_view")
+def make_plot(fig, view_range):
+    """Draws the empty view on fig and returns (axes, scatter of the scan points)."""
+    ax = fig.subplots()
     ax.set_facecolor(SURFACE)
     ax.set_xlim(-view_range, view_range)
     ax.set_ylim(-view_range, view_range)
@@ -81,7 +93,37 @@ def make_plot(view_range):
     ax.set_title("waiting for a full rotation...", color=TEXT)
     ax.plot(0, 0, marker="^", markersize=9, color=TEXT, zorder=3)  # the lidar, front up
     points = ax.scatter([], [], s=4, color=POINTS, linewidths=0)
-    return fig, ax, points
+    return ax, points
+
+
+def save_gif(frames, view_range):
+    """Renders recorded rotations offscreen and saves them as a GIF in media/.
+
+    frames is a list of (time, points). Each frame lasts until the next rotation
+    arrived, so the GIF plays back in real time.
+    """
+    if not frames:
+        print("nothing recorded", file=sys.stderr)
+        return
+    MEDIA.mkdir(exist_ok=True)
+    path = MEDIA / time.strftime("%Y-%m-%d-lidar-%H%M%S.gif")
+    print(f"saving {len(frames)} frames to {path} ...", file=sys.stderr)
+    fig = Figure(figsize=FIGSIZE, dpi=GIF_DPI, facecolor=SURFACE, layout="constrained")
+    canvas = FigureCanvasAgg(fig)
+    ax, points = make_plot(fig, view_range)
+    canvas.draw()
+    fig.set_layout_engine("none")  # the layout is the same every frame, so solve it once
+    images = []
+    for _, scan in frames:
+        points.set_offsets(scan)
+        ax.set_title(f"{len(scan)} points", color=TEXT)
+        canvas.draw()
+        rgb = Image.fromarray(np.asarray(canvas.buffer_rgba())).convert("RGB")
+        images.append(rgb.convert("P", palette=Image.Palette.ADAPTIVE))
+    times = [t for t, _ in frames]
+    durations = [round(1000 * (b - a)) for a, b in zip(times, times[1:])] + [100]
+    images[0].save(path, save_all=True, append_images=images[1:], duration=durations, loop=0)
+    print(f"saved {path} ({path.stat().st_size / 1e6:.1f} MB)", file=sys.stderr)
 
 
 def drain(fd, timeout):
@@ -103,9 +145,15 @@ def main():
     if sys.stdin.isatty():
         parser.error("no input; pipe ultra_simple's output into this script")
 
+    plt.rcParams["keymap.home"] = [k for k in plt.rcParams["keymap.home"] if k != "r"]  # r records
     fd = sys.stdin.fileno()
     scans = ScanParser()
-    fig, ax, points = make_plot(args.range)
+    fig = plt.figure(figsize=FIGSIZE, facecolor=SURFACE, layout="constrained")
+    fig.canvas.manager.set_window_title("lidar_view")
+    ax, points = make_plot(fig, args.range)
+    rec = ax.text(0.02, 0.98, "", transform=ax.transAxes, ha="left", va="top",
+                  color=RECORDING, fontweight="bold")
+    recording = None  # (time, points) for each rotation shown since r was pressed
 
     # Reads whatever stdin has ready and redraws once per completed rotation.
     # If more than one rotation arrived since the last tick, only the newest is drawn.
@@ -123,12 +171,32 @@ def main():
         if scan:
             points.set_offsets(scan)
             ax.set_title(f"{len(scan)} points", color=TEXT)
+            if recording is not None:
+                recording.append((time.monotonic(), scan))
+                rec.set_text(f"● REC {recording[-1][0] - recording[0][0]:.0f} s")
         if ended:
             timer.stop()
             ax.set_title(f"{ax.get_title()} (input ended)", color=TEXT)
         if scan or ended:
             fig.canvas.draw_idle()
 
+    # r starts recording, and r again saves the recording as a GIF.
+    def on_key(event):
+        nonlocal recording
+        if event.key != "r":
+            return
+        if recording is None:
+            recording = []
+            rec.set_text("● REC")
+        else:
+            # Rendering takes a few seconds, so save in the background and keep the view live.
+            # Not a daemon thread, so quitting waits for the GIF to finish.
+            threading.Thread(target=save_gif, args=(recording, args.range)).start()
+            recording = None
+            rec.set_text("")
+        fig.canvas.draw_idle()
+
+    fig.canvas.mpl_connect("key_press_event", on_key)
     timer = fig.canvas.new_timer(interval=20)
     timer.add_callback(update)
     timer.start()
@@ -140,6 +208,8 @@ def main():
         plt.close("all")
         with contextlib.suppress(KeyboardInterrupt):
             drain(fd, timeout=2)
+    if recording:
+        save_gif(recording, args.range)  # still recording when the viewer was stopped
 
 
 if __name__ == "__main__":
