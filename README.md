@@ -9,7 +9,7 @@
 - Stops the motors if no command arrives for 1 second
 - Runs a preflight self-test and scripted test drives (straight, circle, figure eight)
 - Runs entirely on its onboard 3S LiPo battery
-- Reads 360° scans from the RPLIDAR C1 and shows them live as a top-down plot (on my laptop for now)
+- Reads 360° scans from the RPLIDAR C1 on the Raspberry Pi 5 through ROS 2, and shows them live on my laptop in Foxglove
 - No autonomy yet
 
 ## Goal
@@ -35,7 +35,7 @@ Signal and data, showing how the Pi, ESP32, and sensors talk to each other.
 
 ## Code
 
-Clone with the Slamtec SDK submodule:
+Clone with the Slamtec submodules:
 
 ```sh
 git clone --recurse-submodules https://github.com/Ph1so/autonomous-car.git
@@ -44,9 +44,11 @@ git clone --recurse-submodules https://github.com/Ph1so/autonomous-car.git
 If you already cloned without it, run `git submodule update --init` inside the repo.
 
 - `firmware/racecar/`: ESP32 sketch for the drive motors, encoders, steering, and USB/Bluetooth commands. Arduino needs the folder name to match `racecar.ino`.
+- `ros2/`: ROS 2 packages that run on the Pi, like `scan_tools`, whose `point_counter` node counts the valid points in each lidar scan
 - `tools/`: laptop-side scripts, like `lidar_view.py`, a live top-down plot of lidar scans
 - `slam/`: mapping and localization (empty for now)
 - `third_party/rplidar_sdk/`: Slamtec's RPLIDAR SDK, as a git submodule
+- `third_party/rplidar_ros/`: Slamtec's ROS 2 lidar driver, as a git submodule
 - `docs/`: parts list and wiring diagrams
 - `media/`: demo videos and GIFs
 
@@ -77,3 +79,13 @@ https://github.com/user-attachments/assets/e2327bac-70e3-4597-b05d-988a0bba1404
 The car now runs on its 3S LiPo and takes drive and steering commands over Bluetooth, stopping the motors if no command arrives for 1 second. The RPLIDAR C1 streams scans to my laptop through Slamtec's SDK, and `tools/lidar_view.py` plots each rotation live from above.
 
 ![Live lidar view](media/2026-10-28-lidar-173015.gif)
+
+### Oct 29, 2026 — Raspberry Pi 5 and ROS 2 ([`e115d7b`](https://github.com/Ph1so/autonomous-car/commit/e115d7b), [`0da3674`](https://github.com/Ph1so/autonomous-car/commit/0da3674))
+
+My new Raspberry Pi 5 is set up with Ubuntu 24.04 and ROS 2 Jazzy. The lidar now plugs into the Pi instead of my laptop, and Slamtec's ROS 2 driver (`rplidar_ros`) publishes its scans on `/scan`. Foxglove on my Mac subscribes to that topic over the network and shows each scan live, even though the lidar is running off the Pi.
+
+I also wrote my first ROS 2 node. `point_counter` subscribes to `/scan`, counts the points in each scan that land inside the lidar's range, and publishes the count on `/scan_point_count`.
+
+![Lidar on the Pi, shown live in Foxglove on my Mac](media/2026-10-29-pi-lidar-foxglove.gif)
+
+![Lidar scan in Foxglove](media/lidar_foxglove.png)
